@@ -13,7 +13,7 @@
 
 ## 配置/安装方式
 
-基本和原始版本的配置/安装方法完全一致，只有一个细节区别：USG使用的debian中没有systemd，用的是sysv管理启动服务，因此需要把``ss-tproxy.rc``改名为``ss-tproxy``复制到``/etc/init.d``目录中，并且执行``update-rc.d ss-tproxy default 99``以安装该启动脚本。
+基本和原始版本的配置/安装方法完全一致，只有一个细节区别：USG使用的debian中没有systemd，用的是sysv管理启动服务，因此需要把``ss-tproxy.rc``改名为``ss-tproxy``复制到``/etc/init.d``目录中，并且执行``update-rc.d ss-tproxy defaults 99``以安装该启动脚本。
 
 # Linux 透明代理
 ## 什么是正向代理？

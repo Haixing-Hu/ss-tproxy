@@ -1,0 +1,94 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:       ss-tproxy
+# Required-Start: $network $remote_fs $syslog
+# Required-Stop:  $network $remote_fs $syslog
+# Default-Start:
+# Default-Stop:   0 1 6
+# Description:    Start, stop, restart ss-tproxy daemon
+### END INIT INFO
+
+# Don't exit on error status
+set +e
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/local/bin/ss-tproxy
+NAME=ss-tproxy
+DESC="Shadowsocks Transparent Proxy"
+
+# Most configuration options in /etc/default/ss-tproxy are deprecated
+# but still honoured.
+ENABLED=1
+if [ -r /etc/default/$NAME ]; then
+        . /etc/default/$NAME
+fi
+
+# Get the system locale, so that messages are in the correct language, and the
+# charset for IDN is correct
+if [ -r /etc/default/locale ]; then
+        . /etc/default/locale
+        export LANG
+fi
+
+test -x $DAEMON || exit 0
+
+font_bold() {
+    printf "\e[1m$*\e[0m"
+}
+
+color_red() {
+    printf "\e[35m$*\e[0m"
+}
+
+color_green() {
+    printf "\e[32m$*\e[0m"
+}
+
+color_yellow() {
+    printf "\e[31m$*\e[0m"
+}
+
+log_info() {
+    echo "$(font_bold $(color_green '[INFO]')) $*" 1>&2
+}
+
+log_warn() {
+    echo "$(font_bold $(color_yellow '[WARN]')) $*" 1>&2
+}
+
+log_error() {
+    echo "$(font_bold $(color_red '[ERROR]')) $*" 1>&2
+    exit 1
+}
+
+case "$1" in
+  start)
+        log_info "Stopping dnsmasq service ..."
+        service dnsmasq stop
+        log_info "Starting ss-tproxy ..."
+        $DAEMON start
+        ;;
+  stop)
+        log_info "Stopping ss-tproxy ..."
+        $DAEMON stop
+        log_info "Starting dnsmasq service ..."
+        service dnsmasq start
+        ;;
+  restart)
+        log_info "Stopping ss-tproxy ..."
+        $DAEMON stop
+        log_info "Stopping dnsmasq service ..."
+        service dnsmasq stop
+        log_info "Starting ss-tproxy ..."
+        $DAEMON start
+        ;;
+  status)
+        $DAEMON status
+        ;;
+  *)
+        echo "Usage: /etc/init.d/$NAME {start|stop|restart|status}" >&2
+        exit 3
+        ;;
+esac
+
+exit 0

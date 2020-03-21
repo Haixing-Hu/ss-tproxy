@@ -16,22 +16,6 @@ DAEMON=/usr/local/bin/ss-tproxy
 NAME=ss-tproxy
 DESC="Shadowsocks Transparent Proxy"
 
-# Most configuration options in /etc/default/ss-tproxy are deprecated
-# but still honoured.
-ENABLED=1
-if [ -r /etc/default/$NAME ]; then
-        . /etc/default/$NAME
-fi
-
-# Get the system locale, so that messages are in the correct language, and the
-# charset for IDN is correct
-if [ -r /etc/default/locale ]; then
-        . /etc/default/locale
-        export LANG
-fi
-
-test -x $DAEMON || exit 0
-
 font_bold() {
     printf "\e[1m$*\e[0m"
 }
@@ -60,6 +44,28 @@ log_error() {
     echo "$(font_bold $(color_red '[ERROR]')) $*" 1>&2
     exit 1
 }
+
+# Most configuration options in /etc/default/ss-tproxy are deprecated
+# but still honoured.
+ENABLED=1
+if [ -r /etc/default/$NAME ]; then
+        . /etc/default/$NAME
+fi
+
+# Get the system locale, so that messages are in the correct language, and the
+# charset for IDN is correct
+if [ -r /etc/default/locale ]; then
+        . /etc/default/locale
+        export LANG
+fi
+
+if [ -f /lib/lsb/init-functions ]; then
+         . /lib/lsb/init-functions
+else
+        log_error "Cannot find LSB init functions."
+fi
+
+test -x $DAEMON || exit 0
 
 case "$1" in
   start)

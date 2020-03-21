@@ -15,6 +15,8 @@
 
 基本和原始版本的配置/安装方法完全一致，只有一个细节区别：USG使用的debian中没有systemd，用的是sysv管理启动服务，因此需要把``ss-tproxy.rc``改名为``ss-tproxy``复制到``/etc/init.d``目录中，并且执行``update-rc.d ss-tproxy defaults 99``以安装该启动脚本。
 
+注意，如果需要手动启动``ss-tproxy``脚本，ssh登录到USG上后，必须用``nohup /usr/local/bin/ss-tproxy start`` 来启动，否则退出ssh会话后该进程的一切子进程都会被杀死。
+
 # Linux 透明代理
 ## 什么是正向代理？
 代理软件通常分为客户端（client）和服务端（server），server 运行在境外服务器（通常为 Linux 服务器），client 运行在本地主机（如 Windows、Linux、Android、iOS），client 与 server 之间通常使用 tcp 或 udp 协议进行数据通信。大多数 client 被实现为一个 http、socks5 代理服务器，一个软件如果想通过 client 进行科学上网，需要使用 http、socks5 协议与 client 进行数据交互，这是绝大多数人的使用方式。这种代理方式，我们称之为 **正向代理**。所谓正向代理就是，一个软件如果想要使用 client 的代理服务，需要经过特定的设置，否则不会经过 client 的代理。

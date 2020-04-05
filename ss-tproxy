@@ -357,12 +357,13 @@ check_config() {
 }
 
 resolve_svraddr() {
-    log_info_start "Resolving proxy server addresses ..."
+    log_info "Resolving proxy server addresses ..."
     if is_true "$ipv4"; then
         proxy_svripv4=()
         for svraddr in "${proxy_svraddr4[@]}"; do
             is_ipv4_address "$svraddr" && local svripv4="$svraddr" || local svripv4=$(resolve_hostname4 "$svraddr")
             proxy_svripv4+=("$svripv4")
+            log_info "Resolv ${svraddr} to ${svripv4}"
         done
     fi
 
@@ -371,9 +372,10 @@ resolve_svraddr() {
         for svraddr in "${proxy_svraddr6[@]}"; do
             is_ipv6_address "$svraddr" && local svripv6="$svraddr" || local svripv6=$(resolve_hostname6 "$svraddr")
             proxy_svripv6+=("$svripv6")
+            log_info "Resolv ${svraddr} to ${svripv6}"
         done
     fi
-    log_info_end "Success."
+    log_info "Finished."
 }
 
 update_chnlist() {

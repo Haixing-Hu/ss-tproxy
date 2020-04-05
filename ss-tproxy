@@ -1115,8 +1115,8 @@ start() {
     enable_ipforward
     disable_icmpredir
     restore_resolvconf
-    resolve_svraddr
     start_dnsserver
+    resolve_svraddr
     start_proxy_proc
     start_iptables
     modify_resolvconf

@@ -375,7 +375,6 @@ resolve_svraddr() {
             log_info "Resolv ${svraddr} to ${svripv6}"
         done
     fi
-    log_info "Finished."
 }
 
 update_chnlist() {
@@ -553,7 +552,7 @@ start_dnsserver() {
             fi
         done
     fi
-
+    log_info "dnsmasq_append_config=${dnsmasq_append_config}"
     local dnsmasq_common_config=$(cat <<EOF
         $(is_true "$dnsmasq_log_enable" && echo 'log-queries')
         log-facility = $dnsmasq_log_file
@@ -1217,17 +1216,17 @@ main() {
     case "${arguments[0]}" in
         start)           start; status;;
         stop)            stop; status;;
-        r*)              stop; status; echo; start; status;;
+        restart)         stop; status; echo; start; status;;
         status)          status;;
-        show*)           show_iptables;;
+        show-iptables)   show_iptables;;
         flush-postrule)  flush_postrule;;
         flush-dnscache)  flush_dnscache;;
-        delete*)         delete_gfwlist;;
+        delete-gfwlist)  delete_gfwlist;;
         update-chnlist)  update_chnlist;;
         update-gfwlist)  update_gfwlist;;
         update-chnroute) update_chnroute;;
-        v*)              version;;
-        h*)              help;;
+        version)         version;;
+        help)            help;;
         *)               log_warn "Unknown option: ${arguments[0]}"; help; return 1;;
     esac
     return 0

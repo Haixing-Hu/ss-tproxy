@@ -552,7 +552,7 @@ start_dnsserver() {
             fi
         done
     fi
-    log_info "dnsmasq_append_config=${dnsmasq_append_config}"
+    # log_info "dnsmasq_append_config=${dnsmasq_append_config}"
     local dnsmasq_common_config=$(cat <<EOF
         $(is_true "$dnsmasq_log_enable" && echo 'log-queries')
         log-facility = $dnsmasq_log_file
@@ -1116,8 +1116,8 @@ start() {
     enable_ipforward
     disable_icmpredir
     restore_resolvconf
-    start_dnsserver
     resolve_svraddr
+    start_dnsserver
     start_proxy_proc
     start_iptables
     modify_resolvconf
